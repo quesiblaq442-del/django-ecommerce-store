@@ -2,10 +2,10 @@ from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
-import stripe
+import stripe # type: ignore
 from django.conf import settings
 from .forms import CheckoutForm
-from .models import Category, Order, OrderItem, Product
+from .models import Category, Order, OrderItem, Product # type: ignore
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
