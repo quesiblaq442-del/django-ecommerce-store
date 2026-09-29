@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Account{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light">
+                    <h4 class="mb-0">Account information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <p class="text-muted small">First name</p>
+                            <p class="fw-medium">{{ user.first_name|default:"—" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <p class="text-muted small">Last name</p>
+                            <p class="fw-medium">{{ user.last_name|default:"—" }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <p class="text-muted small">Email</p>
+                            <p class="fw-medium">{{ user.email }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <p class="text-muted small">Member since</p>
+                            <p class="fw-medium">{{ user.date_joined|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 bg-light">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Account settings</h5>
+                    <a href="{% url 'account_change_password' %}" class="btn btn-outline-primary d-block w-100 mb-2">Change password</a>
+                    <a href="{% url 'account_logout' %}" class="btn btn-outline-danger d-block w-100">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
