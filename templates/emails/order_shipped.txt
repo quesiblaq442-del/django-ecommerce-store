@@ -1,0 +1,16 @@
+Order Shipped
+=============
+
+Your order has been shipped!
+
+Order #{{ order.id }}
+
+Your package is on its way to:
+{{ order.first_name }} {{ order.last_name }}
+{{ order.address }}
+{{ order.city }}, {{ order.postal_code }}
+{{ order.country }}
+
+Order Total: ${{ order.total }}
+
+Thank you for shopping at {{ site_name }}!

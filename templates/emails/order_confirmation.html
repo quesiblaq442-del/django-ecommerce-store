@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #f8f9fa; padding: 20px; border-radius: 4px; text-align: center; }
+        .content { padding: 20px 0; }
+        .order-item { padding: 10px 0; border-bottom: 1px solid #eee; }
+        .total { font-weight: bold; font-size: 18px; padding: 20px 0; }
+        .footer { text-align: center; color: #666; font-size: 12px; padding-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Order Confirmation</h2>
+            <p>Order #{{ order.id }}</p>
+        </div>
+
+        <div class="content">
+            <h3>Thank you for your order!</h3>
+            <p>Your order has been received and will be processed shortly.</p>
+
+            <h4>Shipping Address:</h4>
+            <p>
+                {{ order.first_name }} {{ order.last_name }}<br>
+                {{ order.address }}<br>
+                {{ order.city }}, {{ order.postal_code }}<br>
+                {{ order.country }}
+            </p>
+
+            <h4>Order Items:</h4>
+            {% for item in items %}
+                <div class="order-item">
+                    <strong>{{ item.product.name }}</strong><br>
+                    Quantity: {{ item.quantity }} | Price: ${{ item.price }}
+                </div>
+            {% endfor %}
+
+            <div class="total">
+                Total: ${{ order.total }}
+            </div>
+
+            <p>You will receive a shipping notification when your order is on its way.</p>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for shopping at {{ site_name }}!</p>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

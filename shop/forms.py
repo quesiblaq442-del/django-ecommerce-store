@@ -1,4 +1,5 @@
-from django import forms # type: ignore
+from django import forms
+from .models import Review
 
 
 class CheckoutForm(forms.Form):
@@ -10,3 +11,14 @@ class CheckoutForm(forms.Form):
     city = forms.CharField(max_length=100, widget=forms.TextInput(attrs={"class": "form-control"}))
     postal_code = forms.CharField(max_length=20, widget=forms.TextInput(attrs={"class": "form-control"}))
     country = forms.CharField(max_length=100, widget=forms.TextInput(attrs={"class": "form-control"}))
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ["rating", "title", "comment"]
+        widgets = {
+            "rating": forms.RadioSelect(choices=[(i, f"{i} Star" if i == 1 else f"{i} Stars") for i in range(1, 6)]),
+            "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Review title"}),
+            "comment": forms.Textarea(attrs={"class": "form-control", "rows": 4, "placeholder": "Share your thoughts..."}),
+        }

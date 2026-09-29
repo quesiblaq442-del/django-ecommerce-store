@@ -4,8 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 import stripe
 from django.conf import settings
-from .forms import CheckoutForm
-from .models import Category, Order, OrderItem, Product
+from .forms import CheckoutForm, ReviewForm
+from .models import Category, Order, OrderItem, Product, Review, Wishlist
+from .emails import send_order_confirmation, send_order_shipped, send_order_delivered
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -68,10 +69,34 @@ def product_list(request):
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
+    reviews = product.reviews.all()
     related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:3]
+    in_wishlist = False
+    user_review = None
+
+    if request.user.is_authenticated:
+        in_wishlist = product.wishlisted_by.filter(user=request.user).exists()
+        user_review = reviews.filter(user=request.user).first()
+
+    if request.method == "POST" and request.user.is_authenticated:
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.product = product
+            review.user = request.user
+            review.save()
+            messages.success(request, "Your review has been posted!")
+            return redirect("product_detail", slug=product.slug)
+    else:
+        form = ReviewForm()
+
     return render(request, "product_detail.html", {
         "product": product,
+        "reviews": reviews,
         "related_products": related_products,
+        "in_wishlist": in_wishlist,
+        "user_review": user_review,
+        "form": form,
     })
 
 
@@ -182,6 +207,7 @@ def checkout(request):
                 order.save()
                 request.session["cart"] = {}
                 request.session.modified = True
+                send_order_confirmation(order)
                 return redirect(session.url, code=303)
             except Exception as e:
                 messages.error(request, f"Payment error: {str(e)}")
@@ -214,3 +240,34 @@ def account_orders(request):
 @login_required
 def account_detail(request):
     return render(request, "account_detail.html", {"user": request.user})
+
+
+@login_required
+def wishlist_view(request):
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    products = wishlist.products.all()
+    return render(request, "wishlist.html", {"products": products})
+
+
+@login_required
+def add_to_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    
+    if product in wishlist.products.all():
+        wishlist.products.remove(product)
+        messages.info(request, f"{product.name} removed from wishlist.")
+    else:
+        wishlist.products.add(product)
+        messages.success(request, f"{product.name} added to wishlist.")
+    
+    return redirect("product_detail", slug=product.slug)
+
+
+@login_required
+def remove_from_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    wishlist = get_object_or_404(Wishlist, user=request.user)
+    wishlist.products.remove(product)
+    messages.info(request, f"{product.name} removed from wishlist.")
+    return redirect("wishlist")

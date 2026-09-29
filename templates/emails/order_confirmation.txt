@@ -1,0 +1,24 @@
+Order Confirmation
+==================
+
+Thank you for your order!
+
+Order #{{ order.id }}
+Order Date: {{ order.created_at|date:"F d, Y" }}
+
+Shipping Address:
+{{ order.first_name }} {{ order.last_name }}
+{{ order.address }}
+{{ order.city }}, {{ order.postal_code }}
+{{ order.country }}
+
+Order Details:
+{% for item in items %}
+- {{ item.product.name }} (x{{ item.quantity }}) - ${{ item.price }}
+{% endfor %}
+
+Total: ${{ order.total }}
+
+You will receive a shipping notification when your order is on its way.
+
+Thank you for shopping at {{ site_name }}!
