@@ -1,12 +1,7 @@
-from django.conf import settings # type: ignore
-from django.conf.urls.static import static # type: ignore
-from django.contrib import admin # type: ignore
-from django.urls import include, path # type: ignore
+import os
 
-urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", include("shop.urls")),
-]
+from django.core.asgi import get_asgi_application
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "storefront.settings")
+
+application = get_asgi_application()
