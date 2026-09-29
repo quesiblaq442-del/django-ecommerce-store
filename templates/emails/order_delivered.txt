@@ -1,0 +1,10 @@
+Order Delivered
+================
+
+Your order has been delivered!
+
+Order #{{ order.id }}
+
+We hope you love your purchase! If you have any questions or issues, please don't hesitate to contact us.
+
+Thank you for shopping at {{ site_name }}!
