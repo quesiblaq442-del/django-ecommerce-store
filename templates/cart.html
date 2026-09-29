@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-5 align-items-center">
+        <div class="col-lg-6">
+            <img src="{{ product.image|default:'https://placehold.co/1200x900' }}" alt="{{ product.name }}" class="img-fluid rounded-4 shadow-lg product-detail-image">
+        </div>
+        <div class="col-lg-6">
+            <p class="text-uppercase small text-muted mb-2">{{ product.category.name }}</p>
+            <h1 class="fw-bold mb-3">{{ product.name }}</h1>
+            <p class="fs-4 fw-semibold text-primary">${{ product.price }}</p>
+            <p class="lead text-muted">{{ product.description }}</p>
+
+            <form method="post" action="{% url 'add_to_cart' product.id %}" class="row g-3 align-items-end mt-4">
+                {% csrf_token %}
+                <div class="col-auto">
+                    <label for="quantity" class="form-label fw-medium">Quantity</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1" max="99" class="form-control" style="width: 100px;">
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Add to cart</button>
+                </div>
+            </form>
+
+            <div class="mt-4 d-flex gap-3 text-muted small">
+                <span>In stock: {{ product.stock }}</span>
+                <span>•</span>
+                <span>Free shipping over $75</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <h3 class="fw-bold mb-4">You may also like</h3>
+        <div class="row g-4">
+            {% for item in related_products %}
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0 product-card">
+                        <img src="{{ item.image|default:'https://placehold.co/600x400' }}" class="card-img-top product-image" alt="{{ item.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span class="fw-bold">${{ item.price }}</span>
+                                <a href="{{ item.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p class="text-muted">No related products available.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

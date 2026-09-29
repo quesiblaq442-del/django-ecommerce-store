@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Order confirmed{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow-sm border-0 p-5 text-center">
+        <div class="mb-3">
+            <span class="badge bg-success-subtle text-success-emphasis px-3 py-2 fs-6">Order confirmed</span>
+        </div>
+        <h1 class="fw-bold mb-3">Thank you, {{ order.first_name }}!</h1>
+        <p class="lead text-muted mb-4">Your order #{{ order.id }} has been placed successfully.</p>
+        <p class="mb-4">We’ve sent a confirmation email to <strong>{{ order.email }}</strong>.</p>
+        <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg">Continue shopping</a>
+    </div>
+</div>
+{% endblock %}

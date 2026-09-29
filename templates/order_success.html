@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="fw-bold mb-4">Checkout</h1>
+
+    <div class="row g-5">
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            {{ form.first_name.label_tag }}
+                            {{ form.first_name }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.last_name.label_tag }}
+                            {{ form.last_name }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.email.label_tag }}
+                            {{ form.email }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.phone.label_tag }}
+                            {{ form.phone }}
+                        </div>
+                        <div class="col-12">
+                            {{ form.address.label_tag }}
+                            {{ form.address }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.city.label_tag }}
+                            {{ form.city }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.postal_code.label_tag }}
+                            {{ form.postal_code }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.country.label_tag }}
+                            {{ form.country }}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg mt-4">Place order</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 p-4">
+                <h4 class="fw-bold mb-3">Your order</h4>
+                {% for item in items %}
+                    <div class="d-flex justify-content-between py-2 border-bottom">
+                        <div>
+                            <span class="fw-medium">{{ item.product.name }}</span>
+                            <div class="text-muted small">Qty: {{ item.quantity }}</div>
+                        </div>
+                        <span>${{ item.line_total }}</span>
+                    </div>
+                {% endfor %}
+                <div class="d-flex justify-content-between fw-bold fs-5 mt-3">
+                    <span>Total</span>
+                    <span>${{ total }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
